@@ -1,0 +1,47 @@
+{
+  "name": "tolk-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for the Tolk smart contract compiler (@ton/tolk-js). Compile, analyze, and explore TON smart contracts from any MCP-compatible AI assistant.",
+  "main": "dist/index.js",
+  "bin": {
+    "tolk-mcp-server": "dist/index.js"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts",
+    "test": "vitest run",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "tolk",
+    "ton",
+    "smart-contracts",
+    "compiler",
+    "model-context-protocol",
+    "ai",
+    "llm"
+  ],
+  "author": "oxgeneral",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@ton/tolk-js": "^0.6.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
+}
