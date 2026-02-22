@@ -5,21 +5,35 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { z } from 'zod';
 import { getTolkCompilerVersion, runTolkCompiler } from '@ton/tolk-js';
 
-const server = new McpServer(
-  {
-    name: 'tolk-mcp-server',
-    version: '1.0.0',
-  },
-  {
-    capabilities: {
-      tools: {},
-      resources: {},
-      prompts: {},
+function createServer() {
+  const server = new McpServer(
+    {
+      name: 'tolk-mcp-server',
+      version: '1.0.0',
     },
-  }
-);
+    {
+      capabilities: {
+        tools: {},
+        resources: {},
+        prompts: {},
+      },
+    }
+  );
+
+  registerTools(server);
+  registerResources(server);
+  registerPrompts(server);
+
+  return server;
+}
+
+export function createSandboxServer() {
+  return createServer();
+}
 
 // ─── TOOLS ───────────────────────────────────────
+
+function registerTools(server: McpServer) {
 
 server.tool(
   'get_compiler_version',
@@ -181,6 +195,8 @@ server.tool(
   };
 });
 
+} // end registerTools
+
 // ─── RESOURCES ───────────────────────────────────
 
 const TOLK_EXAMPLES: Record<string, { title: string; description: string; code: string }> = {
@@ -285,6 +301,8 @@ get fun getWalletData(): (int, slice, slice, cell) {
   },
 };
 
+function registerResources(server: McpServer) {
+
 server.resource(
   'tolk-language-reference',
   'tolk://reference',
@@ -320,7 +338,11 @@ for (const [name, example] of Object.entries(TOLK_EXAMPLES)) {
   );
 }
 
+} // end registerResources
+
 // ─── PROMPTS ─────────────────────────────────────
+
+function registerPrompts(server: McpServer) {
 
 server.prompt(
   'write_smart_contract',
@@ -382,6 +404,8 @@ server.prompt(
     },
   ],
 }));
+
+} // end registerPrompts
 
 // ─── TOLK LANGUAGE REFERENCE ─────────────────────
 
@@ -457,6 +481,8 @@ Use the compile_tolk tool to compile your code. Provide all files as a sources m
 `;
 
 // ─── START ───────────────────────────────────────
+
+const server = createServer();
 
 async function main() {
   const transport = new StdioServerTransport();
